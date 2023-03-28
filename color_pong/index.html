@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Color Pong</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+    <script>
+      function RequestAdFromVk(){
+        vkBridge.send('VKWebAppCheckNativeAds', { ad_format: 'interstitial'});
+        vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'interstitial' })
+  .then((data) => {
+    if (data.result)
+      console.log('Реклама показана');
+    else
+      console.log('Ошибка при показе');
+  })
+  .catch((error) => { console.log(error); /* Ошибка */ });
+      }
+
+      jQuery(document).ready(function($) // страница прогружена
+      {
+        vkBridge.send('VKWebAppInit');
+      });
+    </script>
+  </head>
+  <body style="text-align: center">
+    <canvas id="unity-canvas" style="width: 100vw; height: 100vh; background: #231F20; margin: -8px"></canvas>
+    <script src="Build/color_pong_web.loader.js"></script>
+    <script>
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas:
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+      }
+
+      createUnityInstance(document.querySelector("#unity-canvas"), {
+        dataUrl: "Build/color_pong_web.data.unityweb",
+        frameworkUrl: "Build/color_pong_web.framework.js.unityweb",
+        codeUrl: "Build/color_pong_web.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "FoxLabz",
+        productName: "Color Pong",
+        productVersion: "1.0",
+        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+      });
+    </script>
+  </body>
+</html>
